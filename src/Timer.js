@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { PageHeader, Grid, Row, Col, Button, Glyphicon } from 'react-bootstrap';
+import Form from './Form'
+import { Grid, Row, Col, Button, Glyphicon } from 'react-bootstrap';
 
 export default class Timer extends Component {
   constructor(){
@@ -17,14 +18,19 @@ export default class Timer extends Component {
 
   render() {
     return (
-      <div>
-      {this.state.on && <h1>holiiii</h1> }
+      <Grid>
+        <Row className="show-grid">
+          <Col md={6} mdOffset={3}>
+            {this.state.on && <Form /> }
+            <br />
+            <br />
+            <Button onClick={this.timer.bind(this)} >
+              <Glyphicon glyph="plus" />
+            </Button>
+          </Col>
+        </Row>
+      </Grid>
 
-      <Button onClick={this.timer.bind(this)}>
-        <Glyphicon glyph="plus" />
-      </Button>
-
-      </div>
     );
   }
 }
