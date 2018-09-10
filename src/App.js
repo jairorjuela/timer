@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PageHeader, Grid, Row, Col, Button, Glyphicon } from 'react-bootstrap';
+import { PageHeader, Grid, Row, Col } from 'react-bootstrap';
 import Timer from './Timer';
 import './App.css';
 
@@ -15,9 +15,9 @@ class App extends Component {
               </PageHeader>
             </Col>
           </Row>
-          <Col md={12}>
-          <Timer />
-          </Col>
+          <Row className="show-grid">
+              <Timer />
+          </Row>
         </Grid>
       </div>
     );
