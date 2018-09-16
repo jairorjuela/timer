@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import Form from './Form';
-import { Glyphicon, Grid, Row, Col, Button, FormGroup, FormControl, ControlLabel, ListGroup, ListGroupItem, ButtonGroup } from 'react-bootstrap';
+import { Glyphicon, Grid, Row, Col, Button, FormGroup, FormControl, ControlLabel, ListGroup, ListGroupItem, ButtonGroup, Panel} from 'react-bootstrap';
 
 export default class Timer extends Component {
   constructor(){
     super();
     this.state = {
       on: false,
+      titles: [],
+      projects: [],
+      timers:[{title: " ", project: " "}] ,
       title: '',
       project: '',
       done: false
@@ -30,10 +32,16 @@ export default class Timer extends Component {
 
   handleSubmit(event) {
     this.setState({
-      title: this.state.title
+      titles: this.state.titles.concat(this.state.title),
+      projects: this.state.projects.concat(this.state.project),
+      timers: this.state.timers.concat({title: this.state.title, project: this.state.project}),
+      title: '',
+      project: '',
+      on: !this.state.on,
+      done: !this.state.done
     });
-    console.log('A name was submitted: ' + this.state.title);
-    console.log('A name was submitted: ' + this.state.project);
+    console.log(this.state.timers);
+    event.preventDefault();
   }
 
   timer(){
@@ -46,12 +54,30 @@ export default class Timer extends Component {
 
 
   render() {
-    const title = this.state.title
+
+const sidebar = <div>
+                  {this.state.timers.map((timer) =>
+                    <Panel key={timer.title}>
+                      <ListGroup>
+                        <ListGroupItem>
+                          <h3 align="left">{timer.title}</h3>
+                          <h4 align="left">{timer.project}</h4>
+                        </ListGroupItem>
+                      </ListGroup>
+                    </Panel>
+                  )}
+                </div>
+
     return (
       <Grid>
+
       <Row className="show-grid" id="pruebin">
-        <Col md={4} mdOffset={1}>
-        <Form  title={title}/>
+        <Col md={6} mdOffset={3}>
+
+        <div>
+        {sidebar}
+        </div>
+
         </Col>
       </Row>
         <Row className="show-grid">
@@ -71,7 +97,7 @@ export default class Timer extends Component {
                             <FormControl type="text" placeholder="Ingrese el Proyecto" value={this.state.project} onChange={this.handleChange1} />
                           </FormGroup>
                           <ButtonGroup bsSize="large">
-                            <Button onClick={this.timer.bind(this)} type="submit" bsStyle="success" >Submit</Button>
+                            <Button  type="submit" bsStyle="success" >Submit</Button>
                             <Button onClick={this.timer.bind(this)} bsStyle="danger">Cancel</Button>
                           </ButtonGroup>
                         </ListGroupItem>
