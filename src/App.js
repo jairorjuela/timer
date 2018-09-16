@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Form from './Form';
 import { PageHeader, Grid, Row, Col } from 'react-bootstrap';
 
 import Timer from './Timer';
@@ -15,11 +14,6 @@ class App extends Component {
               <PageHeader>
                 Timers
               </PageHeader>
-            </Col>
-          </Row>
-          <Row className="show-grid" id="pruebin">
-            <Col md={4} mdOffset={1}>
-            <Form />
             </Col>
           </Row>
           <Row className="show-grid">
