@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Form from './Form';
 import { Glyphicon, Grid, Row, Col, Button, FormGroup, FormControl, ControlLabel, ListGroup, ListGroupItem, ButtonGroup, Panel} from 'react-bootstrap';
 
 export default class Timer extends Component {
@@ -6,13 +7,20 @@ export default class Timer extends Component {
     super();
     this.state = {
       on: false,
+      no: false,
       timers: [],
       title: '',
       project: '',
+      title1: '',
+      project1: '',
+      edit: [],
+      id: 1,
       done: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleChange1 = this.handleChange1.bind(this);
+    this.editHandleChange = this.editHandleChange.bind(this);
+    this.editHandleChange1 = this.editHandleChange1.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -28,10 +36,24 @@ export default class Timer extends Component {
     });
   }
 
+  editHandleChange(event) {
+    this.setState({
+      title1: event.target.value
+    });
+  }
+
+  editHandleChange1(event) {
+    this.setState({
+      project1: event.target.value
+    });
+  }
+
   handleSubmit(event) {
+    const id = this.state.id
     if(this.state.title === '' && this.state.project === ''){
       this.setState({
-        timers: this.state.timers.concat({title: 'title', project: 'project'}),
+        id: id + 1,
+        timers: this.state.timers.concat({id: id, title: 'title', project: 'project'}),
         title: '',
         project: '',
         on: !this.state.on,
@@ -40,7 +62,8 @@ export default class Timer extends Component {
     }
     else if(this.state.title === '' && this.state.project !== ''){
       this.setState({
-        timers: this.state.timers.concat({title: 'title', project: this.state.project}),
+        id: id + 1,
+        timers: this.state.timers.concat({id: id, title: 'title', project: this.state.project}),
         title: '',
         project: '',
         on: !this.state.on,
@@ -49,7 +72,8 @@ export default class Timer extends Component {
     }
     else if(this.state.title !== '' && this.state.project === ''){
       this.setState({
-        timers: this.state.timers.concat({title: this.state.title, project: 'project'}),
+        id: id + 1,
+        timers: this.state.timers.concat({id: id, title: this.state.title, project: 'project'}),
         title: '',
         project: '',
         on: !this.state.on,
@@ -58,14 +82,26 @@ export default class Timer extends Component {
     }
     else{
       this.setState({
-        timers: this.state.timers.concat({title: this.state.title, project: this.state.project}),
+        id: id + 1,
+        timers: this.state.timers.concat({id: id, title: this.state.title, project: this.state.project}),
         title: '',
         project: '',
         on: !this.state.on,
         done: !this.state.done
       });
     }
-    console.log(this.state.timers);
+    event.preventDefault();
+  }
+
+  handleSubmit1(id, event) {
+    this.setState({
+      timers: this.state.timers.map((timer) =>
+        timer.id === id ? {id: id, title: this.state.title1, project: this.state.project1} : timer
+      ),
+      title1: '',
+      project1: '',
+      edit: []
+    })
     event.preventDefault();
   }
 
@@ -76,22 +112,85 @@ export default class Timer extends Component {
     });
   }
 
+  editCancel(event){
+    this.setState({
+      edit: []
+    });
+    event.preventDefault();
+  }
+
+  editForm(id, event){
+    var found = this.state.timers.find(function(element) {
+      return element.id === id;
+    });
+    this.setState({
+      no: !this.state.no,
+      edit: this.state.edit.concat(found),
+    });
+    event.preventDefault();
+  }
+
+  deleteForm(id, event){
+    this.setState(prevState => {
+      const timers = prevState.timers.filter(timer => timer.id !== id);
+      return { timers };
+    });
+  }
+
   render() {
 
     const sidebar =
-    <div>
+    <div >
       {this.state.timers.map((timer) =>
-        <Panel key={timer.title}>
-          <ListGroup>
-            <ListGroupItem>
-              <h3 align="left">{timer.title}</h3>
-              <h4 align="left">{timer.project}</h4>
-            </ListGroupItem>
-            <Button bsStyle="success">Success</Button>
-          </ListGroup>
+        <Panel key={timer.id}>
+        <Panel.Body>
+          <h2 align="left">{timer.title}</h2>
+          <h4 className="text-muted" align="left">{timer.project}</h4>
+        </Panel.Body>
+        <Panel.Body>
+          <Form />
+        </Panel.Body>
+        <Panel.Body>
+        <Row className="show-grid">
+          <Col md={9} mdPush={4}>
+          <span onClick={this.deleteForm.bind(this, timer.id)}>
+            <Glyphicon glyph="trash" />
+          </span>
+          </Col>
+          <Col md={2}>
+          <span onClick={this.editForm.bind(this, timer.id)}>
+            <Glyphicon glyph="pencil" />
+          </span>
+          </Col>
+        </Row>
+        </Panel.Body>
+        <Panel.Body >
+          <Button bsStyle="success" bsSize="lg" id="start">Start</Button>
+        </Panel.Body>
         </Panel>
       )}
     </div>
+
+    const edits =
+    <div>
+    {this.state.edit.map((edit) =>
+      <form onSubmit={this.handleSubmit1.bind(this, edit.id)} key={edit.id}>
+      <ListGroupItem >
+        <FormGroup bsSize="large" >
+          <ControlLabel >Title</ControlLabel>
+          <FormControl type="text" placeholder={edit.title} onChange={this.editHandleChange} required/>
+          <ControlLabel >Project</ControlLabel>
+          <FormControl type="text" placeholder={edit.project} onChange={this.editHandleChange1} required/>
+        </FormGroup>
+        <ButtonGroup bsSize="large">
+          <Button  type="submit" bsStyle="success" >Submit</Button>
+          <Button onClick={this.editCancel.bind(this)} bsStyle="danger">Cancel</Button>
+        </ButtonGroup>
+      </ListGroupItem>
+          </form>
+      )}
+      </div>
+
 
     return (
       <Grid>
@@ -128,6 +227,19 @@ export default class Timer extends Component {
                 </Row>
               </Grid>
             }
+
+              <Grid>
+                <Row className="show-grid">
+                  <Col md={4} mdOffset={1}>
+                    <ListGroup>
+                      <div>
+                        {edits}
+                      </div>
+                    </ListGroup>
+                  </Col>
+                </Row>
+              </Grid>
+
             <Button onClick={this.timer.bind(this)} className={this.state.done ? 'done' : null}>
               <Glyphicon glyph="plus" />
             </Button>
