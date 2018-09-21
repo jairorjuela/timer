@@ -143,30 +143,27 @@ export default class Timer extends Component {
     <div >
       {this.state.timers.map((timer) =>
         <Panel key={timer.id}>
-        <Panel.Body>
-          <h2 align="left">{timer.title}</h2>
-          <h4 className="text-muted" align="left">{timer.project}</h4>
-        </Panel.Body>
-        <Panel.Body>
-          <Form />
-        </Panel.Body>
-        <Panel.Body>
-        <Row className="show-grid">
-          <Col md={9} mdPush={4}>
-          <span onClick={this.deleteForm.bind(this, timer.id)}>
-            <Glyphicon glyph="trash" />
-          </span>
-          </Col>
-          <Col md={2}>
-          <span onClick={this.editForm.bind(this, timer.id)}>
-            <Glyphicon glyph="pencil" />
-          </span>
-          </Col>
-        </Row>
-        </Panel.Body>
-        <Panel.Body >
-          <Button bsStyle="success" bsSize="lg" id="start">Start</Button>
-        </Panel.Body>
+          <Panel.Body>
+            <Row className="show-grid">
+              <Col md={12}>
+                <h2 align="left">{timer.title}</h2>
+                <h4 className="text-muted" align="left">{timer.project}</h4>
+              </Col>
+            </Row>
+            <Row className="show-grid">
+              <Col md={9} mdPush={4}>
+                <span onClick={this.deleteForm.bind(this, timer.id)}>
+                  <Glyphicon glyph="trash" />
+                </span>
+              </Col>
+              <Col md={2}>
+                <span onClick={this.editForm.bind(this, timer.id)}>
+                  <Glyphicon glyph="pencil" />
+                </span>
+              </Col>
+            </Row>
+            <Form />
+          </Panel.Body>
         </Panel>
       )}
     </div>
@@ -190,7 +187,6 @@ export default class Timer extends Component {
           </form>
       )}
       </div>
-
 
     return (
       <Grid>

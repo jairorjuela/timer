@@ -1,7 +1,7 @@
-const React = require('react')
+import React, { Component } from 'react';
+import { Panel, Button, ButtonGroup, Row, Col } from 'react-bootstrap';
 
-class View extends React.Component {
-
+export default class View extends Component {
   constructor(props) {
     super(props);
 
@@ -12,30 +12,29 @@ class View extends React.Component {
     running: false
     };
 
-    this._handleStartClick = this._handleStartClick.bind(this);
-    this._handleStopClick = this._handleStopClick.bind(this);
-    this._handleResetClick = this._handleResetClick.bind(this);
+    this.handleStartClick = this.handleStartClick.bind(this);
+    this.handleStopClick = this.handleStopClick.bind(this);
+    this.handleResetClick = this.handleResetClick.bind(this);
   }
 
-  _handleStartClick(event) {
+  handleStartClick(event) {
     if (!this.state.running) {
       this.interval = setInterval(() => {
         this.tick();
       }, 100)
-
       this.setState({running: true})
     }
   }
 
-  _handleStopClick(event) {
+  handleStopClick(event) {
     if (this.state.running) {
       clearInterval(this.interval);
     this.setState({running: false})
     }
   }
 
-  _handleResetClick(event) {
-    this._handleStopClick();
+  handleResetClick(event) {
+    this.handleStopClick();
   this.update(0, 0, 0);
   }
 
@@ -70,42 +69,33 @@ class View extends React.Component {
     });
   }
 
-  componentDidMount() {
-    //TODO
-  }
-
-  componentWillUnMount() {
-    //TODO
-  }
-
   render() {
-    let run = this.state.running === true;
     return (
-      <div className="app">
-        <header className="header">
-          <div className="title">Chronometer-{this.props.ver}</div>
-        </header>
-        <main className="main">
-          <div className="display">
-            <div className="state">{run ? 'Running' : 'Stop'}</div>
-            <div className="segments">
-            <span className="mins">{this.zeroPad(this.state.minutes)}:</span>
-            <span className="secs">{this.zeroPad(this.state.seconds)} </span>
-            <span className="millis">.0{this.state.millis}</span>
-          </div>
-      </div>
-
-          <div className="actions">
-            <button className={"btn start " + (run ? 'disabled' : '')} onClick={this._handleStartClick}>Start</button>
-
-            <button className={"btn stop " + (false === run ? 'disabled' : '')} onClick={this._handleStopClick}>Stop</button>
-
-            <button className={"btn reset " + ( (this.state.seconds > 0 && false === run) ? '' : 'disabled')} onClick={this._handleResetClick}>Reset</button>
-          </div>
-        </main>
+      <div>
+        <Panel.Body >
+          <Row className="show-grid">
+            <Col md={4} mdPush={4}>
+              <h1>{this.zeroPad(this.state.minutes)}</h1>
+            </Col>
+            <Col md={4} mdPush={2}>
+              <h1>: {this.zeroPad(this.state.seconds)}</h1>
+            </Col>
+            <Col md={4}>
+              <h1>: {this.state.millis}</h1>
+            </Col>
+          </Row>
+          <br />
+          <Row className="show-grid">
+            <Col md={12}>
+              <ButtonGroup>
+                <Button bsStyle="success" bsSize="lg" onClick={this.handleStartClick}>Start</Button>
+                <Button bsStyle="danger" bsSize="lg" onClick={this.handleStopClick}>Stop</Button>
+                <Button bsStyle="warning" bsSize="lg" onClick={this.handleResetClick}>Reset</Button>
+              </ButtonGroup>
+            </Col>
+          </Row>
+        </Panel.Body>
       </div>
     );
   }
 }
-
-module.exports = View
