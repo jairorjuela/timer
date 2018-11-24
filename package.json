@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://jairorjuela.github.io/timer/",
   "dependencies": {
+    "gh-pages": "^1.2.0",
     "react": "^16.5.0",
     "react-bootstrap": "^0.32.4",
     "react-dom": "^16.5.0",
